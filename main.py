@@ -57,7 +57,6 @@ try:
                     'exclude_dirs':["__pycahce__","build","dist","tests"],
                     'commit':'inital',
                     'name':repoName[len(repoName)-1],
-                    'private':False,
                     'remote':f"https://github.com/{config['user']}/{repoName[len(repoName)-1]}"}
             wrFile(data)
             pc('git.json file created. You can customize it', cl.OKGREEN)
@@ -68,7 +67,7 @@ try:
             if os.access("git.json", os.R_OK):
                 with open('git.json', 'r') as f:
                     cnf = json.loads(f.read())
-                r = requests.get(f'https://api.github.com/users/{config["user"]}/repos').json()
+                r = requests.get(f"https://api.github.com/users/{config['user']}/repos").json()
                 flag = False
                 for rs in r:
                     if rs["name"]==cnf['name']:
@@ -78,7 +77,7 @@ try:
                 if not flag:
                     pc('WARNING: Remote repo does not exists\nAttempting to create',cl.WARNING)
                     private = str(cnf['private']).lower()
-                    s.run(['curl', '-u', f'{config["user"]}:{config["password"]}', '-d', '{"name":\"'+cnf['name']+'\","private":\"'+private+'\"}', 'https://api.github.com/user/repos'])
+                    s.run(['curl', '-u', f'{config["user"]}:{config["password"]}', '-d', '{"name":\"'+cnf['name']+'}', 'https://api.github.com/user/repos'])
                 os.system('git init .')
                 pc('INFO: git repo initialized', cl.OKGREEN)
                 for file in os.listdir():
